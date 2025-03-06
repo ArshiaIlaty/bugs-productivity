@@ -1,0 +1,800 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fontawesome}
+\usepackage{booktabs}
+\usepackage{mdframed}
+\usepackage{authblk}
+
+\geometry{a4paper, margin=1in}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{blue}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{blue!70}}
+  {\thesubsection}{1em}{}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\Huge\bfseries Comprehensive Guide to\\Coding Productivity\par}
+  \vspace{1cm}
+  {\Large Reference Manual for Machine Learning Operations\par}
+  \vspace{3cm}
+  {\large \today\par}
+  \vspace{2cm}
+  {\large\bfseries By\par}
+  {\Huge Arshia Ilaty\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+This comprehensive guide is designed to enhance productivity for machine learning researchers and developers working with remote servers, GPU infrastructure, and distributed training systems. The document organizes essential commands, workflows, and best practices for various operational tasks encountered during machine learning research and development.
+
+\section{Project Structure}
+A well-organized project structure enhances collaboration and productivity. Below is the recommended structure for machine learning projects:
+
+\begin{lstlisting}[language=bash, caption=Basic Project Structure]
+project-root/
+├── data/                # Datasets directory
+│   ├── raw/             # Raw unprocessed data
+│   ├── processed/       # Processed data ready for modeling
+│   └── external/        # Data from external sources
+├── models/              # Saved models and checkpoints
+├── notebooks/           # Jupyter notebooks for exploration
+├── src/                 # Source code
+│   ├── __init__.py
+│   ├── data/            # Data processing scripts
+│   ├── features/        # Feature engineering scripts
+│   ├── models/          # Model implementation
+│   └── utils/           # Utility functions
+├── configs/             # Configuration files
+├── experiments/         # Experiment logs and results
+├── scripts/             # Automation scripts
+├── tests/               # Test files
+├── requirements.txt     # Dependencies
+├── setup.py             # Package setup
+└── README.md            # Project documentation
+\end{lstlisting}
+
+\section{Remote Server Operations}
+
+\subsection{SSH Connection and Authentication}
+Secure shell (SSH) connection is essential for remote server access.
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=SSH Connection Commands]
+\begin{lstlisting}[language=bash]
+# Basic SSH connection
+ssh username@server-address
+
+# Example with specific port
+ssh -p PORT_NUMBER username@server-address
+
+# Using SSH key for authentication
+ssh -i /path/to/private_key username@server-address
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{VPN Connection}
+VPN connection for secure access to internal resources.
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=VPN Connection (MacOS)]
+\begin{lstlisting}[language=bash]
+# Control GlobalProtect VPN via AppleScript
+echo 'tell application "System Events"
+    tell process "GlobalProtect"
+        click menu bar item 1 of menu bar 2
+    end tell
+end tell' > gp-control.scpt
+
+# Execute the script
+osascript gp-control.scpt
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Command Extraction and History Management}
+\subsection{Command History Basics}
+
+Command history tracking is essential for reproducibility in machine learning projects. Understanding different ways to extract and analyze your command history can save significant time when revisiting projects or sharing workflows with colleagues.
+
+\begin{tcolorbox}[colback=brown!5!white, colframe=brown!75!black, title=Basic Command History]
+\begin{lstlisting}[language=bash]
+# View command history
+history
+
+# Export all command history
+history > command_history.txt
+
+# Search command history
+history | grep "keyword"
+
+# Export the last N commands
+history N > recent_commands.txt
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Advanced Command History Filtering}
+For more complex projects, filtering command history by date, pattern, or context can be invaluable.
+
+\begin{tcolorbox}[colback=brown!5!white, colframe=brown!75!black, title=Advanced Command History Filtering]
+\begin{lstlisting}[language=bash]
+# Filter commands from the last 7 days
+history | awk -v date="$(date -d '7 days ago' '+%F')" '$2 >= date' > recent_commands.txt
+
+# Extract commands for a specific project
+history | grep "project_name" > project_commands.txt
+
+# Find all Python script executions
+history | grep "python" > python_commands.txt
+
+# Extract GPU-related commands
+history | grep -E 'nvidia|cuda|gpu' > gpu_commands.txt
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Project-Specific Command Extraction}
+For machine learning projects with multiple components, extracting commands by project directory can help with documentation.
+
+\begin{tcolorbox}[colback=brown!5!white, colframe=brown!75!black, title=Project-Specific Command Extraction]
+\begin{lstlisting}[language=bash]
+# Extract commands for a specific project path
+cat ~/.bash_history | grep -i "project_name"
+
+# Extract all conda environment activations 
+cat ~/.bash_history | grep -i "conda activate"
+
+# Find all commands run in a specific directory
+cat ~/.bash_history | grep -i "cd directory_name" -A 5
+
+# Extract all training commands
+cat ~/.bash_history | grep -i "python.*train"
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{File Operations}
+
+\subsection{File Transfer Between Local and Remote}
+Efficient file transfer commands for moving data between local and remote systems.
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!75!black, title=File Transfer with SCP]
+\begin{lstlisting}[language=bash]
+# From local to remote server
+scp /local/path/file.csv username@server:/remote/path/
+
+# From remote server to local
+scp username@server:/remote/path/file.csv /local/path/
+
+# For directories (recursive)
+scp -r /local/directory username@server:/remote/path/
+
+# With specific port
+scp -P PORT_NUMBER /local/path/file.csv username@server:/remote/path/
+
+# With SSH key
+scp -i /path/to/key.pem /local/path/file.csv username@server:/remote/path/
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Basic File Management}
+Essential file operations for organizing your workspace.
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!75!black, title=File Management Commands]
+\begin{lstlisting}[language=bash]
+# Moving files
+mv /path/to/source /path/to/destination
+
+# Copying files
+cp source_file destination_file
+
+# Copying directories (recursive)
+cp -r source_directory destination_directory
+
+# Removing files
+rm filename
+
+# Removing directories (recursive)
+rm -r directory_name
+
+# Creating backup of a directory
+cp -r project/ project-backup/
+
+# Finding large files
+find /path/to/search -type f -size +100M | sort -k 5 -nr
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{GPU and Computing Resources}
+
+\subsection{Monitoring GPU Usage}
+Commands for tracking GPU resource utilization.
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=GPU Monitoring]
+\begin{lstlisting}[language=bash]
+# Monitor GPU usage in real-time
+watch -n 1 nvidia-smi
+
+# Get detailed GPU information
+nvidia-smi -q
+
+# Monitor specific metrics
+nvidia-smi --query-gpu=timestamp,name,utilization.gpu,utilization.memory,memory.used,memory.total --format=csv -l 1
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{CUDA Management}
+Optimizing CUDA for better GPU usage.
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=CUDA Environment Setup]
+\begin{lstlisting}[language=bash]
+# Avoid memory fragmentation in PyTorch
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
+
+# Explicitly select GPU device
+export CUDA_VISIBLE_DEVICES="0"
+export CUDA_DEVICE_ORDER="PCI_BUS_ID"
+
+# Check CUDA version
+nvcc --version
+
+# List available CUDA devices
+python -c "import torch; print(torch.cuda.device_count())"
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=PyTorch CUDA Configuration Code]
+\begin{lstlisting}[language=python]
+import os
+import torch
+
+# Add this to avoid memory fragmentation
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
+# Add explicit device selection for MIG environment
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+
+# Check CUDA availability
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"CUDA device count: {torch.cuda.device_count()}")
+if torch.cuda.is_available():
+    print(f"Current CUDA device: {torch.cuda.current_device()}")
+    print(f"Device name: {torch.cuda.get_device_name()}")
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Creating Persistent CUDA Environments}
+Setting up persistent conda environments for CUDA development in shared platforms like JupyterHub.
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=Persistent CUDA Environment Setup]
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+# Create a persistent CUDA environment
+# Usage: bash persistent_setup_cuda_env.sh [env_name] [python_version]
+
+# Default values
+ENV_NAME=${1:-"cuda_env"}
+PYTHON_VERSION=${2:-"3.10"}
+PERSISTENT_DIR="/home/username/persistent_envs"  # Use a persistent location
+
+# Create persistent directory
+mkdir -p $PERSISTENT_DIR
+
+echo "=== Setting up persistent CUDA environment ==="
+echo "Environment name: $ENV_NAME"
+echo "Python version: $PYTHON_VERSION"
+echo "Location: $PERSISTENT_DIR/$ENV_NAME"
+
+# Initialize conda
+CONDA_BASE=$(conda info --base)
+source "$CONDA_BASE/etc/profile.d/conda.sh"
+
+# Create environment in persistent location
+conda create -y -p "$PERSISTENT_DIR/$ENV_NAME" python="$PYTHON_VERSION"
+conda activate "$PERSISTENT_DIR/$ENV_NAME"
+
+# Install PyTorch with CUDA support
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+# Install additional packages
+conda install -y -c conda-forge numpy scipy pandas matplotlib jupyterlab
+pip install transformers accelerate
+
+# Create activation script
+ACTIVATE_SCRIPT="/home/username/activate_$ENV_NAME.sh"
+cat > "$ACTIVATE_SCRIPT" << EOF
+#!/bin/bash
+# Initialize conda
+source "\$(conda info --base)/etc/profile.d/conda.sh"
+
+# Activate by PATH not by NAME
+conda activate "$PERSISTENT_DIR/$ENV_NAME"
+
+# Check CUDA status
+nvidia-smi
+python -c "import torch; print('CUDA available:', torch.cuda.is_available())"
+EOF
+
+chmod +x "$ACTIVATE_SCRIPT"
+echo "Created activation script: $ACTIVATE_SCRIPT"
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Why Use Path-Based Environments?}
+
+In shared environments like JupyterHub, conda environments are often automatically deleted after periods of inactivity. This behavior affects environments activated by name but not those activated by path.
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=Named vs. Path-Based Conda Environments]
+\begin{tabular}{p{6cm}|p{6cm}}
+\hline
+\textbf{Named Environment} & \textbf{Path-Based Environment} \\
+\hline
+\texttt{conda create -n env\_name} & \texttt{conda create -p /path/to/env} \\
+\texttt{conda activate env\_name} & \texttt{conda activate /path/to/env} \\
+Stored in Conda's central location & Stored in custom location \\
+Subject to auto-cleanup & Persists through cleanup cycles \\
+Easier syntax & More verbose but more persistent \\
+\hline
+\end{tabular}
+\end{tcolorbox}
+
+Key advantages of path-based environments:
+\begin{itemize}
+    \item Survive automatic cleanup in shared environments
+    \item Can be placed in backed-up or shared directories
+    \item Facilitate team collaboration with identical environments
+    \item Provide explicit location awareness
+\end{itemize}
+
+\subsection{Clearing CUDA Cache}
+Cleaning up GPU memory for better resource utilization.
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=CUDA Cache Management]
+\begin{lstlisting}[language=python]
+# Clear PyTorch CUDA cache in Python
+import torch
+torch.cuda.empty_cache()
+
+# Memory management in PyTorch code
+def clear_gpu_memory():
+    import gc
+    import torch
+    gc.collect()
+    torch.cuda.empty_cache()
+    
+    # Print memory stats for verification
+    print(f"Memory allocated: {torch.cuda.memory_allocated() / 1e9:.2f} GB")
+    print(f"Memory reserved: {torch.cuda.memory_reserved() / 1e9:.2f} GB")
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Disk Space Management and Cleanup}
+
+\subsection{Identifying Disk Usage}
+Commands to identify what's consuming disk space on your machine learning environment.
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Disk Usage Analysis]
+\begin{lstlisting}[language=bash]
+# Check overall disk usage
+df -h
+
+# Check size of specific directory
+du -sh /path/to/directory
+
+# Find the largest directories (depth=1)
+du -h --max-depth=1 /home/username | sort -hr
+
+# Find large files (>100MB)
+find /home/username -type f -size +100M | xargs du -h | sort -hr
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Cache Management}
+ML environments often accumulate large caches that can be safely cleaned.
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Cache Cleanup]
+\begin{lstlisting}[language=bash]
+# Check pip cache size
+du -sh ~/.cache/pip/
+
+# Clear pip cache
+pip cache purge
+
+# Check conda cache
+du -sh ~/.conda/pkgs/
+
+# Clean conda cache
+conda clean -a -y
+
+# Check Hugging Face cache (often very large)
+du -sh ~/.cache/huggingface/
+
+# Selectively remove Hugging Face models
+rm -rf ~/.cache/huggingface/hub/models--specific-model-name
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Managing Large Model Caches}
+When working with large language models, caches can quickly consume gigabytes of space.
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=LLM Cache Management]
+\begin{lstlisting}[language=bash]
+# List large model files (>1GB)
+find ~/.cache/huggingface -type f -size +1G | xargs du -h | sort -hr
+
+# Remove specific large models (examples)
+rm -rf ~/.cache/huggingface/hub/models--facebook--opt-350m
+rm -rf ~/.cache/huggingface/hub/models--mistralai--Mistral-7B-v0.1
+
+# Keep track of which models you've deleted
+echo "Deleted: facebook/opt-350m on $(date)" >> ~/model_cleanup_log.txt
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Creating a Cleanup Script}
+For repeatable cleanup operations, create a maintenance script.
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=ML Environment Cleanup Script]
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+# ML Environment Cleanup Script
+
+echo "=== Starting ML Environment Cleanup ==="
+echo "Date: $(date)"
+
+# Check initial disk usage
+echo "Initial disk usage:"
+df -h | grep /home
+
+# Clear pip cache
+echo "Clearing pip cache..."
+pip cache purge -y
+
+# Clear conda packages
+echo "Clearing conda package cache..."
+conda clean -a -y
+
+# Remove specific large models (customize as needed)
+echo "Removing unused model caches..."
+rm -rf ~/.cache/huggingface/hub/models--facebook--opt-350m
+rm -rf ~/.cache/huggingface/hub/models--google--gemma-2b
+
+# Remove temporary files
+echo "Cleaning temporary files..."
+find /tmp -user $(whoami) -type f -mtime +7 -delete
+
+# Check final disk usage
+echo "Final disk usage:"
+df -h | grep /home
+
+echo "=== Cleanup Complete ==="
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Persistent Training Sessions}
+
+\subsection{Using Screen for Long-Running Processes}
+Managing long-running training processes with Screen utility.
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Screen Session Management]
+\begin{lstlisting}[language=bash]
+# Create a new screen session
+screen -S session_name
+
+# Start training in the screen session
+python training_script.py --config config.yaml
+
+# Detach from screen (without stopping it)
+# Press Ctrl+A, then D
+
+# List running screen sessions
+screen -ls
+
+# Reconnect to an existing screen session
+screen -r session_name
+
+# Kill a screen session
+screen -X -S session_name quit
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Alternative: Using Nohup}
+Alternative approach using nohup for persistent processes.
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Nohup Command for Persistence]
+\begin{lstlisting}[language=bash]
+# Run process that continues after logout
+nohup python training_script.py > training.log &
+
+# Check running jobs
+jobs
+
+# Bring job to foreground
+fg %job_number
+
+# Check process ID
+echo $!
+
+# Monitor log file
+tail -f training.log
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Version Control and Collaboration}
+
+\subsection{Git Operations}
+Essential Git commands for version control.
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!75!black, title=Git Workflow Commands]
+\begin{lstlisting}[language=bash]
+# Clone repository
+git clone https://github.com/username/repository.git
+
+# Clone to specific directory
+git clone https://github.com/username/repository.git custom-name
+
+# Create and switch to new branch
+git checkout -b new-branch-name
+
+# Add changes
+git add .
+
+# Commit changes
+git commit -m "Descriptive commit message"
+
+# Push to remote
+git push origin branch-name
+
+# Pull latest changes
+git pull origin branch-name
+
+# Check status
+git status
+
+# View commit history
+git log --oneline
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection{Environment Management}
+Managing Conda environments for reproducible research.
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!75!black, title=Conda Environment Commands]
+\begin{lstlisting}[language=bash]
+# Initialize Conda (if needed)
+source /opt/conda/etc/profile.d/conda.sh
+
+# List available environments
+conda info --envs
+
+# Create new environment
+conda create -n env_name python=3.10
+
+# Activate environment
+conda activate env_name
+
+# Deactivate environment
+conda deactivate
+
+# Install packages
+conda install package_name
+pip install package_name
+
+# Install from requirements file
+pip install -r requirements.txt
+
+# Export environment
+conda env export > environment.yml
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Federated Learning Setup}
+
+\subsection{Federated Training Commands}
+Commands for setting up and running federated learning systems.
+
+\begin{tcolorbox}[colback=cyan!5!white, colframe=cyan!75!black, title=Federated Learning Setup]
+\begin{lstlisting}[language=bash]
+# Start federated server
+python federated_training.py -c='configs/cervical.yaml'
+
+# With Flower framework - Server
+python federated_training_flower.py --mode server --wandb-key API_KEY
+
+# Running with screen for persistence
+screen -S federated_training
+python federated_training.py -c='configs/cervical.yaml'
+# Detach with Ctrl+A+D
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Data Configuration}
+
+\subsection{Dataset Configuration}
+Setting up dataset configurations for machine learning models.
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!75!black, title=Dataset Configuration Example]
+\begin{lstlisting}[language=json]
+{
+    "name": "[diabetes]",
+    "task_type": "[binclass]", # binclass or regression
+    "header": "infer",
+    "column_names": null,
+    "num_col_idx": [1, 5, 6, 7],  # numerical columns
+    "cat_col_idx": [0, 2, 3, 4],  # categorical columns
+    "target_col_idx": [8], # target columns (for MLE)
+    "file_type": "csv",
+    "data_path": "data/diabetes/diabetes.csv"
+    "test_path": null,
+}
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Model Training and Evaluation}
+
+\subsection{Training Commands for Different Models}
+Commands for training various types of generative models.
+
+\begin{tcolorbox}[colback=olive!5!white, colframe=olive!75!black, title=Training Pipeline Commands]
+\begin{lstlisting}[language=bash]
+# Tab-DDPM baseline
+python main_train.py --dataname diabetes --method tabddpm --mode train
+
+# TabSyn VAE training
+python main.py --dataname diabetes --method vae --mode train
+
+# TabSyn diffusion model training
+python main.py --dataname diabetes --method tabsyn --mode train
+
+# Complete Tab-DDPM pipeline
+python scripts/pipeline.py --config exp/diabetes/ddpm_cb_best/config.toml --train --sample --eval
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Authentication Tokens}
+
+\subsection{API and Access Tokens}
+Keeping track of authentication tokens for various services.
+
+\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=Authentication Token Management]
+\begin{lstlisting}[language=bash]
+# GitHub Personal Access Tokens
+# Use environment variables to store tokens securely
+export GITHUB_TOKEN=your_token_here
+
+# Similarly for other API keys
+export WANDB_API_KEY=your_key_here
+
+# Using tokens in curl requests
+curl -O -J -L -H "Authorization: token $API_TOKEN" https://api.example.com/resource
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Appendix: Quick Reference}
+
+\subsection{Common Commands Cheatsheet}
+
+\begin{tabular}{p{6cm}p{8cm}}
+\toprule
+\textbf{Task} & \textbf{Command} \\
+\midrule
+SSH Connection & \texttt{ssh username@server} \\
+File Transfer (Local → Remote) & \texttt{scp file.csv username@server:/path/} \\
+File Transfer (Remote → Local) & \texttt{scp username@server:/path/file.csv ./} \\
+GPU Monitoring & \texttt{watch -n 1 nvidia-smi} \\
+Start Screen Session & \texttt{screen -S session\_name} \\
+Reconnect to Screen & \texttt{screen -r session\_name} \\
+Detach from Screen & \texttt{Ctrl+A, D} \\
+Clear CUDA Cache & \texttt{torch.cuda.empty\_cache()} \\
+Create Persistent Environment & \texttt{conda create -p /path/to/env python=3.10} \\
+Activate Persistent Environment & \texttt{conda activate /path/to/env} \\
+Export Command History & \texttt{history > history.txt} \\
+Check Disk Usage & \texttt{df -h} \\
+Find Large Files & \texttt{find /path -type f -size +100M | sort -hr} \\
+Clear Pip Cache & \texttt{pip cache purge} \\
+Remove HF Model Cache & \texttt{rm -rf \textasciitilde/.cache/huggingface/hub/models--model-name} \\
+\bottomrule
+\end{tabular}
+
+\section{Troubleshooting Common Issues}
+
+\subsection{Out of Disk Space}
+When encountering "No space left on device" errors during package installation:
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Disk Space Troubleshooting]
+\begin{enumerate}
+    \item \textbf{Diagnose}: Run \texttt{df -h} to check overall disk usage
+    \item \textbf{Identify}: Use \texttt{du -h --max-depth=1 \textasciitilde/ | sort -hr} to find large directories
+    \item \textbf{Clean caches}: Run \texttt{pip cache purge} and \texttt{conda clean -a -y}
+    \item \textbf{Remove models}: Delete unused model caches with \texttt{rm -rf \textasciitilde/.cache/huggingface/hub/models--unused-model}
+    \item \textbf{Use no-cache}: Install with \texttt{pip install --no-cache-dir package\_name}
+    \item \textbf{Clean temporary files}: \texttt{rm -rf /tmp/username\_files/}
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Environment Persistence Issues}
+When conda environments disappear after inactivity:
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Environment Persistence Solutions]
+\begin{enumerate}
+    \item \textbf{Use path-based environments}: \texttt{conda create -p /persistent/path/env\_name}
+    \item \textbf{Avoid name-based activation}: Use \texttt{conda activate /persistent/path/env\_name} (not \texttt{conda activate env\_name})
+    \item \textbf{Create activation scripts}: Generate helper scripts that activate the environment by path
+    \item \textbf{Export environment specs}: Keep \texttt{environment.yml} and \texttt{requirements.txt} for quick recreation
+    \item \textbf{Use persistent storage}: Install environments in directories known to persist
+    \item \textbf{Document installation steps}: Keep a record of all installation commands for reproducibility
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{CUDA and GPU Issues}
+When encountering problems with GPU access and CUDA:
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=GPU Troubleshooting]
+\begin{enumerate}
+    \item \textbf{Verify GPU access}: Run \texttt{nvidia-smi} to confirm GPU visibility
+    \item \textbf{Check CUDA installation}: Run \texttt{nvcc --version} and \texttt{python -c "import torch; print(torch.cuda.is\_available())"} 
+    \item \textbf{Clear GPU memory}: Add \texttt{torch.cuda.empty\_cache()} before operations
+    \item \textbf{Use correct CUDA version}: Match torch installation to system CUDA version
+    \item \textbf{Set environment variables}: Use \texttt{CUDA\_VISIBLE\_DEVICES} to control which GPUs are used
+    \item \textbf{Monitor memory usage}: Use \texttt{watch -n 1 nvidia-smi} to track GPU memory
+\end{enumerate}
+\end{tcolorbox}
+
+\section{Conclusion}
+
+Efficient machine learning operations require careful management of computational resources, environments, and workflows. This guide has provided comprehensive instructions for command extraction, persistent environment setup, and system maintenance, specifically addressing common challenges in shared computing environments.
+
+Key takeaways:
+\begin{itemize}
+    \item Maintain detailed records of commands for reproducibility
+    \item Use path-based Conda environments in shared systems for persistence
+    \item Implement regular maintenance of cached data, especially from large models
+    \item Monitor and manage disk usage proactively
+    \item Develop clear workflows for common operations
+\end{itemize}
+
+By implementing these best practices, researchers can focus more on scientific innovation rather than troubleshooting technical issues. The time saved through proper environment management, systematic command tracking, and proactive system maintenance compounds over the course of a research project, ultimately accelerating the pace of discovery and model development.
+
+Furthermore, these practices enhance collaboration by making research more reproducible and environments more consistent across team members. When environments are properly documented and persistent, onboarding new team members becomes significantly easier, and knowledge transfer is more efficient.
+
+The field of machine learning is rapidly evolving, with models growing larger and computational requirements increasing. The discipline required to maintain organized workflows, persistent environments, and efficient resource usage will become increasingly valuable as these trends continue. Researchers who implement systematic approaches to their computational infrastructure position themselves for sustained productivity in an increasingly complex field.
+
+\end{document}
